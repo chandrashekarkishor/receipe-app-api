@@ -11,4 +11,25 @@ services:
     volumes:
       - ./app:/app # creates volume like if project created inside container will also creates it here.
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+    depends_on:
+      - db   # if db service fails then app service also failes
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data  # this path was found by document of postgresql container as inside container this location would be used
+    environment:
+      - POSTGRES_DB=devdb # creates database devdb
+      - POSTGRES_USER=devuser # sets user as devuser
+      - POSTGRES_PASSWORD=changeme # sets password as changeme     these created on local for testing purpose
+
+volumes:
+  dev-db-data:
