@@ -24,7 +24,9 @@ class Command(BaseCommand):
         while not db_up:
             try:
                 self.check(
-                    databases=['default'])  # check is internal method of Base command to check availability of dB
+                    databases=['default'])
+                # check is internal method of Base command
+                # to check availability of dB
                 db_up = True
             except (Psycopg2Error, OperationalError):
                 self.stdout.write("Database unavailable, waiting for 1 sec")
