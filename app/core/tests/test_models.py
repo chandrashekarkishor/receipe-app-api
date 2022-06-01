@@ -56,7 +56,7 @@ class ModelTest(TestCase):
         :return:
         """
         user = get_user_model().objects.create_superuser(
-            "admin@example.com"
+            "admin@example.com",
             "admin123"
         )
         self.assertTrue(user.is_superuser)
